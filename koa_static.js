@@ -1,5 +1,4 @@
 const Koa    = require("koa");
-const path   = require("path");
 const config = require("./config");
 const app  = new Koa();
 
