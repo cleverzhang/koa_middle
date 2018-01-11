@@ -84,4 +84,29 @@ async function get(ctx){
 function getType(file_path){
     return mime.getType(file_path) || 'text/plain';
 }
-module.exports = {get, getFileContent, getDirList};
+
+
+module.exports = function(){
+    return async (ctx, next) => {
+        "use strict";
+        let uri  = decodeURI(ctx.url);
+        try {
+            var fc = await get(ctx);
+        }
+        catch (e){
+            console.log(e);
+            ctx.statusCode = e.code || 404;
+            ctx.body = `${e.uri} Not Found(${e.code})`;
+            return;
+        }
+        if (Array.isArray(fc)){
+            ctx.body = fc.map(val => {
+                return "<p><a href='"+ path.join(uri, val) + "'>" + val + "</a></p>";
+            }).join("\n");
+        }
+        else{
+            ctx.body = fc;
+        }
+        next();
+    }
+};
