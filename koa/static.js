@@ -4,7 +4,7 @@
 var fs      = require("fs");
 var path    = require("path");
 var mime    = require("mime");
-var config  = require("../config");
+var config  = require("../config").static;
 function getFileContent(file){
     "use strict";
     return new Promise((resolve, reject) => {
