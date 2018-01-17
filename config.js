@@ -8,4 +8,9 @@ let redis = {
     host : "127.0.0.1",
     port : "7379"
 };
-module.exports = {static, redis};
+
+let session = {
+   key    : "SESSION_ID",
+   expire : "1800"
+};
+module.exports = {static, redis, session};

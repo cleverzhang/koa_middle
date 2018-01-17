@@ -15,18 +15,13 @@ module.exports = (options) => {
             });
         });
     }
-
     return async (ctx, next) => {
-        var redis_server = await connect_redis();
         ctx.redis = new Proxy({},{
             get(target, prop){
-                if (prop in target){
-                    return target[prop];
-                }
-                let func = function () {
+                return function () {
                     var arg = arguments;
                     return new Promise((resolve, reject) => {
-                        try{
+                        connect_redis().then((redis_server)=>{
                             redis_server[prop](...arg, (err, reply) => {
                                 if (err){
                                     reject(err);
@@ -34,14 +29,13 @@ module.exports = (options) => {
                                 else{
                                     resolve(reply);
                                 }
+                                redis_server.quit();
                             });
-                        }
-                        catch (err) {
+                        }).catch((err) => {
                             reject(err);
-                        }
+                        });
                     });
                 };
-                return target[prop] = func;
             }
         });
         await next();
