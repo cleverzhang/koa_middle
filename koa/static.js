@@ -107,6 +107,6 @@ module.exports = function(){
         else{
             ctx.body = fc;
         }
-        next();
+        await next();
     }
 };
